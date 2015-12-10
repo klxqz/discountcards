@@ -1,0 +1,96 @@
+<script type="text/javascript" src="{$wa_url}wa-content/js/jquery-plugins/fileupload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="{$wa_url}wa-content/js/jquery-plugins/fileupload/jquery.fileupload.js"></script>
+
+<p>Импорт/Экспорт дисконтных карт</p>
+<div class="block double-padded">
+
+    <form id="s-plugin-discountcards-import" method="post" action="?plugin=discountcards&module=import">
+        <div class="fields">
+
+            <div class="field-group">
+                <h2>Импорт</h2>
+                <p>Загрузка дисконтных карт из CSV-файла на сайт</p>
+                <div class="field">
+                    <div class="name">
+                        Разделитель
+                    </div>
+                    <div class="value">
+                        <select name="delimiter">
+                            <option value=";">;</option>
+                            <option value=",">,</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name">
+                        Ограничитель
+                    </div>
+                    <div class="value">
+                        <select name="enclosure">
+                            <option value="\"">"</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="name">
+                        Очистить
+                    </div>
+                    <div class="value">
+                        <input type="checkbox" name="empty" value="" />
+                        <p class="hint">Очистить текущий список дисконтных карт и загрузить новый</p>
+                    </div>
+                </div>
+
+
+                <div class="field">
+                    <div class="name">
+                        Файл
+                    </div>
+                    <div class="value no-shift">
+                        <input type="file" class="fileupload" data-action="?plugin=discountcards&module=upload">
+                        <div class="js-fileupload-progress" style="display:none;">
+                            <i class="icon16 loading"></i><span><!-- upload progress handler --></span>
+                        </div>
+                        <span class="errormsg" style="display:none;"><br><br><i class="icon10 no"></i> <span></span></span>
+
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="value submit">
+                        <input type="submit" class="button green" value="Импортировать">
+                        <div class="response"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form id="s-plugin-discountcards-export" method="post" action="?plugin=discountcards&module=export">
+        <div class="fields">
+
+            <div class="field-group">
+                <h2>Экспорт</h2>
+                <p>Выгрузка дисконтных карт в CSV-файл</p>
+                <div class="field">
+                    <div class="value submit">
+                        <input type="submit" class="button green" value="Экспортировать">
+                        <div class="response"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+
+
+    <div class="clear-both"></div>
+
+</div>
+<script type="text/javascript" src="{$wa_app_static_url}plugins/discountcards/js/importexport.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $.discountcards_importexport.init();
+    });
+</script>

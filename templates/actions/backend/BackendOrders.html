@@ -1,0 +1,99 @@
+<form id="discountcard-search-orders">
+    <div class="fields form">
+        <div class="field">
+            <div class="name">
+                Номер заказа
+            </div>
+            <div class="value">
+                <input type="text" name="order_id" value="{$wa->get('order_id')|escape}" />
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Номер карты
+            </div>
+            <div class="value">
+                <input type="text" name="discountcard" value="{$wa->get('discountcard')|escape}" />
+            </div>
+        </div>
+        <div class="field">
+            <div class="value submit">
+                <input type="submit" class="button green" value="Найти">
+            </div>
+        </div>
+    </div>
+</form>
+<div class="clear-both"></div>
+
+<h1>Заказы</h1>
+<table class="zebra single-lined padded" id="discountcards-list">
+    <thead>
+        <tr class="header">
+            <th></th>
+            <th>Номер заказа</th>
+            <th>Дата заказа</th>
+            <th>Статус заказа</th>
+            <th>Покупатель</th>
+            <th>Сумма заказа</th>
+            <th>Скидка при заказе</th>
+            <th>Номер карты (Размер скидки)</th>
+            <th>Размер скидки по карте при заказе</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $discountcards_orders as $discountcards_order}
+            {$style = $discountcards_order.state->getStyle()}
+            <tr>
+                <td style="{$style}">
+                    <img src="{$discountcards_order.order.contact.photo_50x50}" />
+                </td>
+                <td style="{$style}">
+                    <a style="{$style}" target="_blank" href="?action=orders#/order/{$discountcards_order.order_id}/">
+                        <i class="{$discountcards_order.state->getOption('icon')}"></i>
+                        {$discountcards_order.order_id_encode}
+                    </a>
+                </td>
+                <td style="{$style}">{$discountcards_order.order.create_datetime|wa_datetime:"humandatetime"}</td>
+                <td style="{$style}">{$discountcards_order.state->getName()}</td>
+                <td style="{$style}">
+                    <a style="{$style}" target="_blank" href="?action=customers#/id/{$discountcards_order.order.contact.id}/">
+                        {$discountcards_order.order.contact.name}
+                    </a>
+                </td>
+                <td style="{$style}">{shop_currency($discountcards_order.order.total)}</td>
+                <td style="{$style}">{shop_currency($discountcards_order.order.discount)}</td>
+                <td style="{$style}">
+                    {$discountcards_order.discountcard}
+                    {if !empty($discountcards_order._discountcard)} 
+                        ({$discountcards_order._discountcard.discount}%)
+                    {else} 
+                        (Карта не существует)
+                    {/if}
+                </td>
+                <td style="{$style}">{$discountcards_order.discount}%</td>
+            </tr>
+        {/foreach}
+    </tbody>
+</table>
+
+<div class="lazyloading">
+    <div class="lazyloading-progress-string">{$offset + $count} из {$total_count}</div><br>
+    <span class="lazyloading-progress" style="display:none">
+        <i class="icon16 loading"></i> [`Loading`]
+    </span>
+</div>
+{if !$lazy}
+    <script type="text/javascript" src="{$wa_app_static_url}plugins/discountcards/js/lazy.load.js?v={$wa->version()}"></script>
+
+    <script>
+        $(function () {
+            $.discountcards.initLazyLoad({
+                auto: true,
+                total_count: {$total_count},
+                count: {$count},
+                url: '?plugin=discountcards&action=orders',
+                search_form: '#discountcard-search-orders'
+            });
+        });
+    </script>
+{/if}

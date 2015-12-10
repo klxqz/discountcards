@@ -1,0 +1,42 @@
+<div class="discountcard-input-block">
+    Дисконтная карта: <input id="discountcard-input" type="text" name="discountcard" value="{$discountcard|default:''|escape}" />
+    {if !empty($discountcard)}
+        <input id="discountcard-cancel" type="hidden" name="discountcard-cancel" value="1" />
+        <input id="discountcard-submit" type="submit" value="Отменить" />
+        <p>Ваша дисконтная карта предоставляет скидку в {$discountcard_discount}%</p>
+    {else}
+        <input id="discountcard-cancel" type="hidden" name="discountcard-cancel" value="0" />
+        <input id="discountcard-submit" type="submit" value="Применить" />
+    {/if}
+
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#discountcard-submit').click(function () {
+            var button = $(this);
+            button.attr('disabled', 'disabled');
+            $.ajax({
+                url: '{$wa->getUrl('shop/frontend/discountcard')}',
+                data: {
+                    discountcard: $('#discountcard-input').val(),
+                    cancel: $('#discountcard-cancel').val()
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status == 'ok') {
+                        location.reload();
+                    } else {
+                        alert(response.errors.join(','));
+                    }
+                    button.removeAttr('disabled');
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    button.removeAttr('disabled');
+                }
+            });
+            return false;
+        });
+    });
+</script>

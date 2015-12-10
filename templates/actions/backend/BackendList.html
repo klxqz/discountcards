@@ -1,0 +1,109 @@
+<form id="discountcard-search">
+    <div class="fields form">
+        <div class="field">
+            <div class="name">
+                Номер карты
+            </div>
+            <div class="value">
+                <input type="text" name="discountcard" value="{$wa->get('discountcard')|escape}" />
+            </div>
+        </div>
+        <div class="field">
+            <div class="value submit">
+                <input type="submit" class="button green" value="Найти">
+            </div>
+        </div>
+    </div>
+</form>
+<div class="clear-both"></div>
+
+<h1>Дисконтные карты</h1>
+<div class="block">
+    <a class="inline add-button" href="#"><i class="icon16 add"></i>Добавить</a>
+    <a class="inline delete-selected" href="#"><i class="icon16 delete"></i>Удалить выделенные</a>
+</div>
+<table class="zebra single-lined padded" id="discountcards-list">
+    <thead>
+        <tr class="header">
+            <th>
+                <input type="checkbox">
+            </th>
+            <th>Дисконтная карта</th>
+            <th>Скидка, %</th>
+            <th>Сумма</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $discountcards as $discountcard}
+            <tr data-id="{$discountcard.id}" class="discountcard">
+                <td>
+                    <input class="delete-checkbox" type="checkbox" name="id[{$discountcard.id}]" value="1">
+                </td>
+                <td>{$discountcard.discountcard}</td>
+                <td>{$discountcard.discount}%</td>
+                <td>{shop_currency($discountcard.amount)}</td>
+                <td>
+                    <a class="inline edit-button" href="#"><i class="icon16 edit"></i></a>
+                    <a class="inline delete-buttom" href="#"><i class="icon16 delete"></i></a>
+                </td>
+            </tr>
+        {/foreach}
+
+    </tbody>
+</table>
+
+<div class="lazyloading">
+    <div class="lazyloading-progress-string">{$offset + $count} из {$total_count}</div><br>
+    <span class="lazyloading-progress" style="display:none">
+        <i class="icon16 loading"></i> [`Loading`]
+    </span>
+</div>
+{if !$lazy}
+    <script type="text/javascript" src="{$wa_app_static_url}plugins/discountcards/js/lazy.load.js?v={$wa->version()}"></script>
+
+    <script>
+        $(function () {
+            $.discountcards.initLazyLoad({
+                auto: true,
+                total_count: {$total_count},
+                count: {$count},
+                search_form: '#discountcard-search'
+            });
+        });
+    </script>
+
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-plugins/jquery.tmpl.min.js"></script>
+    {literal}
+        <script id="discountcard-edit-tr-tmpl" type="text/x-jquery-tmpl">
+            <tr data-id="${id}" class="discountcard edit">
+            <td><input type="checkbox"></td>
+            <td>
+            <input type="hidden" name="discountcard[id]" value="${id}" />
+            <input type="text" name="discountcard[discountcard]" value="${discountcard}" />
+            </td>
+            <td>
+            <input type="text" name="discountcard[discount]" value="${discount}" />
+            </td>
+            <td>
+            <input type="text" name="discountcard[amount]" value="${amount}" />
+            </td>
+            <td>
+            <a class="save-button inline button green" href="#">Сохранить</a>
+            </td>
+            </tr>
+        </script>
+        <script id="discountcard-tr-tmpl" type="text/x-jquery-tmpl">
+            <tr data-id="${id}" class="discountcard">
+            <td><input type="checkbox"></td>
+            <td>${discountcard}</td>
+            <td>${discount}%</td>
+            <td>${amount}</td>
+            <td>
+            <a class="inline edit-button" href="#"><i class="icon16 edit"></i></a>
+            <a class="inline delete-buttom" href="#"><i class="icon16 delete"></i></a>
+            </td>
+            </tr>
+        </script>
+    {/literal}
+{/if}

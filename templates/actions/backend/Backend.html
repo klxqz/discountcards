@@ -1,0 +1,29 @@
+<div class="sidebar left200px" id="bonuses-sidebar">
+    <div class="">
+        <ul class="menu-v with-icons">
+            <li>
+                <a href="#/"><i class="icon16 star"></i>Дисконтные карты</a>
+            </li>
+            <li>
+                <a href="#/orders/"><i class="icon16 ss shop"></i>Заказы</a>
+            </li>
+            <li>
+                <a href="?action=importexport#/discountcards/"><i class="icon16 export"></i>Импорт/Экспорт</a>
+            </li>
+            <li>
+                <a href="?action=plugins#/discountcards/"><i class="icon16 settings"></i>Настройки плагина</a>
+            </li>
+        </ul>
+    </div> 
+</div>
+
+<div class="content left200px blank" id="discountcards-content">
+    <div class="block triple-padded"><i class="icon16 loading"></i>[`Loading...`]</div>
+</div>
+
+<script type="text/javascript" src="{$wa_app_static_url}plugins/discountcards/js/discountcards.js?{$wa->version()}"></script>
+<script>
+    $(function () {
+        $.discountcards.init();
+    });
+</script>
