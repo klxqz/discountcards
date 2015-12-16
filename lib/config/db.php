@@ -12,6 +12,7 @@ return array(
         'amount' => array('decimal', '15,4', 'null' => 0),
         ':keys' => array(
             'PRIMARY' => array('id'),
+            'discountcard' => array('discountcard', 'unique' => 1),
         ),
     ),
     'shop_discountcards_order' => array(

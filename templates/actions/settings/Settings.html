@@ -47,6 +47,27 @@
         <div class="field-group"{if !$settings.status} style="display:none;"{/if}>
             <div class="field">
                 <div class="name">
+                    Вывод в стандартном месте в корзине
+                </div>
+                <div class="value">
+                    <input type="hidden" name="shop_discountcards[frontend_cart]" value="0">
+                    <input{if $settings.frontend_cart|default:''} checked="checked"{/if} type="checkbox" name="shop_discountcards[frontend_cart]" value="1">
+                    <p class="hint">Вывод через хук frontend_cart. Для вывода в происзовльном месте используйте хелпер вывода: <strong>{ldelim}shopDiscountcardsPlugin::display(){rdelim}</strong></p>
+                </div>
+            </div>
+            <div class="field">
+                <div class="name">
+                    Вывод в стандартном месте в личном кабинете
+                </div>
+                <div class="value">
+                    <input type="hidden" name="shop_discountcards[frontend_my_orders]" value="0">
+                    <input{if $settings.frontend_my_orders|default:''} checked="checked"{/if} type="checkbox" name="shop_discountcards[frontend_my_orders]" value="1">
+                    <p class="hint">Вывод через хук frontend_my_orders. Для вывода в происзовльном месте используйте хелпер вывода: <strong>{ldelim}shopDiscountcardsPlugin::displayFrontendMyOrders(){rdelim}</strong></p>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
                     Событие начисления баллов за заказ
                 </div>
                 <div class="value">

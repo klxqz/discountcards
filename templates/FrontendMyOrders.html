@@ -1,14 +1,15 @@
-<div class="discountcard-input-block">
+<h2>Дисконтная карта</h2>
+<div class="discountcard-my-block">
     <span class="discountcard-label">Дисконтная карта: </span><input id="discountcard-input" type="text" name="discountcard" value="{$discountcard|default:''|escape}" />
     {if !empty($discountcard)}
         <input id="discountcard-cancel" type="hidden" name="discountcard-cancel" value="1" />
         <input id="discountcard-submit" type="submit" value="Отменить" />
-        <p>Ваша дисконтная карта предоставляет скидку в {$discountcard_discount}%</p>
+        <p class="discountcard-discount">Ваша дисконтная карта предоставляет скидку в {$discountcard_discount}%</p>
+        <p class="discountcard_amount">Ваши накопления: {shop_currency($discountcard_amount)}</p>
     {else}
         <input id="discountcard-cancel" type="hidden" name="discountcard-cancel" value="0" />
         <input id="discountcard-submit" type="submit" value="Применить" />
-    {/if}
-
+    {/if}  
 </div>
 <script type="text/javascript">
     $(function () {
