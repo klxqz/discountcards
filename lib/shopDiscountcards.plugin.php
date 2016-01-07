@@ -48,10 +48,12 @@ class shopDiscountcardsPlugin extends shopPlugin {
                         $def_currency = wa('shop')->getConfig()->getCurrency(true);
                         foreach ($params['order']['items'] as $item_id => $item) {
                             if ($item['type'] == 'product') {
-                                $discount['items'][$item_id] = array(
-                                    'discount' => shop_currency($item['price'] * $discountcard['discount'] / 100.00, $item['currency'], $params['order']['currency'], false) * $item['quantity'],
-                                    'description' => "Скидка по дисконтной карте {$discountcard['discount']}%"
-                                );
+                                if (!($this->getSettings('ignore_compare_price') && $item['product']['compare_price'] > 0)) {
+                                    $discount['items'][$item_id] = array(
+                                        'discount' => shop_currency($item['price'] * $discountcard['discount'] / 100.00, $item['currency'], $params['order']['currency'], false) * $item['quantity'],
+                                        'description' => "Скидка по дисконтной карте {$discountcard['discount']}%"
+                                    );
+                                }
                             }
                         }
                         return $discount;

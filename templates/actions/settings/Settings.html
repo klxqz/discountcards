@@ -85,8 +85,20 @@
                     Не учитывать стоимость доставки
                 </div>
                 <div class="value">
+                    <input type="hidden" name="shop_discountcards[without_delivery]" value="0">
                     <input{if $settings.without_delivery|default:''} checked="checked"{/if} type="checkbox" name="shop_discountcards[without_delivery]" value="1">
                     <p class="hint">Не учитывать стоимость доставки при начисление бонусов за заказ</p>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
+                    Дисконтная карта не действует на товар с зачеркнутой ценой
+                </div>
+                <div class="value">
+                    <input type="hidden" name="shop_discountcards[ignore_compare_price]" value="0">
+                    <input{if $settings.ignore_compare_price|default:''} checked="checked"{/if} type="checkbox" name="shop_discountcards[ignore_compare_price]" value="1">
+                    <p class="hint">Скидка по дисконтной карте не применяется к товарам, у которых задана зачеркнутая цена</p>
                 </div>
             </div>
         </div>
@@ -97,6 +109,7 @@
                     Автоматический пересчет скидки
                 </div>
                 <div class="value">
+                    <input type="hidden" name="shop_discountcards[recalculation]" value="0">
                     <input{if $settings.recalculation|default:''} checked="checked"{/if} type="checkbox" name="shop_discountcards[recalculation]" value="1">
                     <p class="hint">Автоматический пересчет скидки при начисление баллов за заказ. Пересчет выполняется с использованием данных из таблицы "Накопления"</p>
                 </div>
