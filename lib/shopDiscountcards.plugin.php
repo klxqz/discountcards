@@ -40,9 +40,23 @@ class shopDiscountcardsPlugin extends shopPlugin {
 
     public function orderCalculateDiscount($params) {
         if ($this->getSettings('status')) {
-            if ($discountcard = wa()->getStorage()->get('shop/discountcard')) {
+            if ($discountcard_number = wa()->getStorage()->get('shop/discountcard')) {
                 $model = new shopDiscountcardsPluginModel();
-                if ($discountcard = $model->getByField('discountcard', $discountcard)) {
+                
+                if ($this->getSettings('binding_customer')) {
+                    if ($contact_id = wa()->getUser()->getId()) {
+                        $discountcard = $model->getByField(array('contact_id' => $contact_id, 'discountcard' => $discountcard_number));
+                        if (empty($discountcard)) {
+                            $discountcard = $model->getByField(array('contact_id' => 0, 'discountcard' => $discountcard_number));
+                        }
+                    } else {
+                        $discountcard = $model->getByField(array('contact_id' => 0, 'discountcard' => $discountcard_number));
+                    }
+                } else {
+                    $discountcard = $model->getByField('discountcard', $discountcard_number);
+                }
+
+                if ($discountcard) {
                     if ($discountcard['discount']) {
                         $discount = array();
                         $def_currency = wa('shop')->getConfig()->getCurrency(true);

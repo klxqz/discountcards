@@ -101,6 +101,16 @@
                     <p class="hint">Скидка по дисконтной карте не применяется к товарам, у которых задана зачеркнутая цена</p>
                 </div>
             </div>
+            <div class="field">
+                <div class="name">
+                    Привязка к покупателю
+                </div>
+                <div class="value">
+                    <input type="hidden" name="shop_discountcards[binding_customer]" value="0">
+                    <input{if $settings.binding_customer|default:''} checked="checked"{/if} type="checkbox" name="shop_discountcards[binding_customer]" value="1">
+                    <p class="hint">Дисконтной картой может воспользоваться только тот покупатель, к которому эта карта привязана</p>
+                </div>
+            </div>
         </div>
 
         <div class="field-group"{if !$settings.status} style="display:none;"{/if}>

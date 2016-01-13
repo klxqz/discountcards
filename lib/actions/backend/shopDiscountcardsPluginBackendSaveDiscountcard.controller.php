@@ -19,6 +19,10 @@ class shopDiscountcardsPluginBackendSaveDiscountcardController extends waJsonCon
                 $id = $model->insert($discountcard);
                 $discountcard = $model->getById($id);
             }
+            if(!empty($discountcard['contact_id'])) {
+                $contact = new waContact($discountcard['contact_id']);
+                $discountcard['contact_name'] = $contact->get('name');
+            }
             $discountcard['amount'] = shop_currency($discountcard['amount']);
             $this->response = $discountcard;
         } catch (Exception $ex) {

@@ -7,11 +7,13 @@
 return array(
     'shop_discountcards' => array(
         'id' => array('int', 11, 'null' => 0, 'autoincrement' => 1),
+        'contact_id' => array('int', 11, 'null' => 0),
         'discountcard' => array('varchar', 25),
         'discount' => array('int', 11, 'null' => 0),
         'amount' => array('decimal', '15,4', 'null' => 0),
         ':keys' => array(
             'PRIMARY' => array('id'),
+            'contact_id' => 'contact_id',
             'discountcard' => array('discountcard', 'unique' => 1),
         ),
     ),

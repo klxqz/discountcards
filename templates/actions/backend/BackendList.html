@@ -28,6 +28,7 @@
             <th>
                 <input type="checkbox">
             </th>
+            <th>Покупатель</th>
             <th>Дисконтная карта</th>
             <th>Скидка, %</th>
             <th>Сумма</th>
@@ -39,6 +40,13 @@
             <tr data-id="{$discountcard.id}" class="discountcard">
                 <td>
                     <input class="delete-checkbox" type="checkbox" name="id[{$discountcard.id}]" value="1">
+                </td>
+                <td>
+                    {if $discountcard.contact_id}
+                        <a href="?action=customers#/id/{$discountcard.contact_id}/">{$discountcard.contact.name}</a>
+                    {else}
+                        Карта не закреплена за клиентом
+                    {/if}
                 </td>
                 <td>{$discountcard.discountcard}</td>
                 <td>{$discountcard.discount}%</td>
@@ -80,6 +88,9 @@
             <td><input type="checkbox"></td>
             <td>
             <input type="hidden" name="discountcard[id]" value="${id}" />
+            ID покупателя: <input type="text" name="discountcard[contact_id]" value="${contact_id}" />
+            </td>
+            <td>
             <input type="text" name="discountcard[discountcard]" value="${discountcard}" />
             </td>
             <td>
@@ -96,6 +107,13 @@
         <script id="discountcard-tr-tmpl" type="text/x-jquery-tmpl">
             <tr data-id="${id}" class="discountcard">
             <td><input type="checkbox"></td>
+            <td>
+            {{if contact_id != '0'}}
+            <a href="?action=customers#/id/${contact_id}/">${contact_name}</a>
+            {{else}}
+            Карта не закреплена за клиентом 
+            {{/if}}
+            </td>
             <td>${discountcard}</td>
             <td>${discount}%</td>
             <td>${amount}</td>

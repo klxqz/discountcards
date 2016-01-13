@@ -20,13 +20,14 @@ class shopDiscountcardsPluginImportController extends waJsonController {
 
             $f = fopen($filepath, "r");
             while (($data = fgetcsv($f, null, $delimiter, $enclosure)) !== FALSE) {
-                if (empty($data[0])) {
+                if (empty($data[1])) {
                     continue;
                 }
                 $discountcard = array(
-                    'discountcard' => $data[0],
-                    'discount' => $data[1],
-                    'amount' => $data[2],
+                    'contact_id' => $data[0],
+                    'discountcard' => $data[1],
+                    'discount' => $data[2],
+                    'amount' => $data[3],
                 );
                 if ($model->insert($discountcard)) {
                     $inserted++;

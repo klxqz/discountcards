@@ -20,6 +20,12 @@ class shopDiscountcardsPluginBackendListAction extends waViewAction {
         $sql = "SELECT * " . $this->getSql() . " LIMIT $offset, $limit";
         $discountcards = $model->query($sql)->fetchAll();
 
+        foreach ($discountcards as &$discountcard) {
+            if (!empty($discountcard['contact_id'])) {
+                $discountcard['contact'] = new waContact($discountcard['contact_id']);
+            }
+        }
+
         $this->view->assign(array(
             'discountcards' => $discountcards,
             'offset' => $offset,
