@@ -4,7 +4,7 @@ return array(
     'name' => 'Дисконтные карты',
     'description' => 'Предоставление накопительной скидки по дисконтным картам',
     'vendor' => 985310,
-    'version' => '1.2.0',
+    'version' => '1.3.0',
     'img' => 'img/discountcards.png',
     'shop_settings' => true,
     'frontend' => true,
@@ -18,6 +18,7 @@ return array(
         'order_action.complete' => 'orderActionComplete',
         'order_action.refund' => 'orderActionRefund',
         'frontend_my_orders' => 'frontendMyOrders',
+        'backend_order' => 'backendOrder',
     ),
 );
 //EOF

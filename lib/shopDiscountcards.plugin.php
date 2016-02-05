@@ -42,7 +42,7 @@ class shopDiscountcardsPlugin extends shopPlugin {
         if ($this->getSettings('status')) {
             if ($discountcard_number = wa()->getStorage()->get('shop/discountcard')) {
                 $model = new shopDiscountcardsPluginModel();
-                
+
                 if ($this->getSettings('binding_customer')) {
                     if ($contact_id = wa()->getUser()->getId()) {
                         $discountcard = $model->getByField(array('contact_id' => $contact_id, 'discountcard' => $discountcard_number));
@@ -188,6 +188,20 @@ class shopDiscountcardsPlugin extends shopPlugin {
             $template_path = wa()->getAppPath('plugins/discountcards/templates/FrontendMyOrders.html', 'shop');
             $html = $view->fetch($template_path);
             return $html;
+        }
+    }
+
+    public function backendOrder($order) {
+        if ($this->getSettings('status')) {
+            $discountcard_order_model = new shopDiscountcardsPluginOrderModel();
+            if ($discountcard_order = $discountcard_order_model->getByField('order_id', $order['id'])) {
+                $html = <<<HTML
+<p>
+    <h3><span class="gray">Дисконтная карта:</span><strong> {$discountcard_order['discountcard']} ({$discountcard_order['discount']}%)</strong></h3>
+</p>
+HTML;
+                return array('info_section' => $html);
+            }
         }
     }
 
