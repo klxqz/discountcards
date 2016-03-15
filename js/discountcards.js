@@ -144,7 +144,14 @@
         },
         initButton: function () {
             var self = this;
-
+            $('.select-all').change(function () {
+                if ($(this).is(':checked')) {
+                    $('.delete-checkbox').attr('checked', 'checked');
+                } else {
+                    $('.delete-checkbox').removeAttr('checked');
+                }
+            });
+            
             $('.delete-selected').click(function () {
                 var post_data = $('input.delete-checkbox:checked').serialize();
                 $.ajax({

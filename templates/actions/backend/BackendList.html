@@ -26,7 +26,7 @@
     <thead>
         <tr class="header">
             <th>
-                <input type="checkbox">
+                <input class="select-all" type="checkbox">
             </th>
             <th>Покупатель</th>
             <th>Дисконтная карта</th>
@@ -39,7 +39,7 @@
         {foreach $discountcards as $discountcard}
             <tr data-id="{$discountcard.id}" class="discountcard">
                 <td>
-                    <input class="delete-checkbox" type="checkbox" name="id[{$discountcard.id}]" value="1">
+                    <input class="delete-checkbox" type="checkbox" name="id[]" value="{$discountcard.id}">
                 </td>
                 <td>
                     {if $discountcard.contact_id}

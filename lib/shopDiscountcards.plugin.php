@@ -44,7 +44,13 @@ class shopDiscountcardsPlugin extends shopPlugin {
                 $model = new shopDiscountcardsPluginModel();
 
                 if ($this->getSettings('binding_customer')) {
-                    if ($contact_id = wa()->getUser()->getId()) {
+                    if (wa()->getStorage()->get('shop/discountcard/customer_id')) {
+                        $contact_id = wa()->getStorage()->get('shop/discountcard/customer_id');
+                    } else {
+                        $contact_id = wa()->getUser()->getId();
+                    }
+
+                    if ($contact_id) {
                         $discountcard = $model->getByField(array('contact_id' => $contact_id, 'discountcard' => $discountcard_number));
                         if (empty($discountcard)) {
                             $discountcard = $model->getByField(array('contact_id' => 0, 'discountcard' => $discountcard_number));
@@ -60,9 +66,11 @@ class shopDiscountcardsPlugin extends shopPlugin {
                     if ($discountcard['discount']) {
                         $discount = array();
                         $def_currency = wa('shop')->getConfig()->getCurrency(true);
-                        foreach ($params['order']['items'] as $item_id => $item) {
+                        foreach ($params['order']['items'] as $item_id => $item) {                            
                             if ($item['type'] == 'product') {
-                                if (!($this->getSettings('ignore_compare_price') && $item['product']['compare_price'] > 0)) {
+                                $skus_model = new shopProductSkusModel();
+                                $sku = $skus_model->getSku($item['sku_id']);
+                                if (!($this->getSettings('ignore_compare_price') && $sku['compare_price'] > 0)) {
                                     $discount['items'][$item_id] = array(
                                         'discount' => shop_currency($item['price'] * $discountcard['discount'] / 100.00, $item['currency'], $params['order']['currency'], false) * $item['quantity'],
                                         'description' => "Скидка по дисконтной карте {$discountcard['discount']}%"
@@ -74,6 +82,7 @@ class shopDiscountcardsPlugin extends shopPlugin {
                     }
                 } else {
                     wa()->getStorage()->set('shop/discountcard', '');
+                    wa()->getStorage()->set('shop/discountcard/customer_id', '');
                 }
             }
         }
@@ -91,6 +100,8 @@ class shopDiscountcardsPlugin extends shopPlugin {
                         'discount' => $discountcard['discount'],
                     );
                     $discountcard_order_model->insert($data);
+                    wa()->getStorage()->set('shop/discountcard', '');
+                    wa()->getStorage()->set('shop/discountcard/customer_id', '');
                 }
             }
         }
@@ -202,6 +213,23 @@ class shopDiscountcardsPlugin extends shopPlugin {
 HTML;
                 return array('info_section' => $html);
             }
+        }
+    }
+
+    public function backendOrderEdit($order) {
+        if ($this->getSettings('status')) {
+            $view = wa()->getView();
+            if ($discountcard_number = wa()->getStorage()->get('shop/discountcard')) {
+                $model = new shopDiscountcardsPluginModel();
+                if ($discountcard = $model->getByField('discountcard', $discountcard_number)) {
+                    $discountcard['contact'] = new waContact($discountcard['contact_id']);
+                    $discountcard['amount_format'] = shop_currency($discountcard['amount']);
+                    $view->assign('discountcard', $discountcard);
+                }
+            }
+            $template_path = wa()->getAppPath('plugins/discountcards/templates/BackendOrderEdit.html', 'shop');
+            $html = $view->fetch($template_path);
+            return $html;
         }
     }
 

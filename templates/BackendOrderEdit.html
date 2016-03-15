@@ -1,0 +1,88 @@
+<div class="discountcard-input-block">
+    <p class="block">
+        <span class="discountcard-label">Дисконтная карта: </span>
+        <input class="long" id="discountcard-input" type="text" name="discountcard" value="{$discountcard.discountcard|default:''|escape}" />
+        <input{if !empty($discountcard)} style="display: none;"{/if} id="discountcard-submit-apply" class="discountcard-submit" type="submit" value="Применить" />
+        <input{if empty($discountcard)} style="display: none;"{/if} id="discountcard-submit-cancel" class="discountcard-submit" type="submit" value="Отменить" />
+    </p>
+    <p class="discountcard-response block">
+        {if !empty($discountcard)}
+            Закреплена за: 
+            <strong>
+                {if $discountcard.contact_id}
+                    <a target="_blank" href="?action=customers#/id/{$discountcard.contact_id}/">{$discountcard.contact.name}</a>
+                {else}
+                    Карта не закреплена за клиентом
+                {/if}
+            </strong><br/>
+            Дисконтная карта: <strong>{$discountcard.discountcard}</strong><br/>
+            Скидка: <strong>{$discountcard.discount}%</strong><br/>
+            Сумма: <strong>{$discountcard.amount_format}</strong>
+        {/if}
+    </p>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.discountcard-input-block').insertAfter('form#order-edit-form .content table#order-items');
+        $('.discountcard-submit').click(function () {
+            var action = $(this).attr('id') == 'discountcard-submit-apply' ? 'apply' : 'cancel';
+            var button = $(this);
+            button.attr('disabled', 'disabled');
+            var loading = $('<i class="icon16 loading"></i>');
+            button.after(loading);
+            $.ajax({
+                url: '?plugin=discountcards&action=applyDiscountcard',
+                data: {
+                    customer_id: $('#s-customer-id').val(),
+                    discountcard: $('#discountcard-input').val(),
+                    cancel: (action == 'cancel' ? 1 : 0)
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (response) {
+                    loading.remove();
+                    button.removeAttr('disabled');
+                    if (response.status == 'ok') {
+                        if (action == 'apply') {
+                            $('.discountcard-response').html(
+                                    'Закреплена за: <strong>' + (response.data.contact_id != 0 ? '<a target="_blank" href="?action=customers#/id/' +
+                                            response.data.contact_id + '/">' + response.data.contact_name + '</a>' : 'Карта не закреплена за клиентом') + '</strong><br/>\
+                                    Дисконтная карта: <strong>' + response.data.discountcard + '</strong><br/>\
+                                    Скидка: <strong>' + response.data.discount + '%</strong><br/>\
+                                    Сумма: <strong>' + response.data.amount_format + '</strong>');
+                            $('#discountcard-submit-apply').hide();
+                            $('#discountcard-submit-cancel').show();
+                        } else {
+                            $('#discountcard-input').val('');
+                            $('.discountcard-response').html('');
+                            $('#discountcard-submit-apply').show();
+                            $('#discountcard-submit-cancel').hide();
+                        }
+                        $.order_edit.updateTotal();
+                    } else {
+                        $('.discountcard-response').html('');
+                        alert(response.errors.join(','));
+                    }
+                },
+                error: function (response) {
+                    loading.remove();
+                    alert(response.responseText);
+                    button.removeAttr('disabled');
+                }
+            });
+            return false;
+        });
+
+        $('#order-edit-form').on('order_total_updated', function (e, data) {
+            var $update_discount_button = $('#update-discount');
+            var $discount_input = $('#discount');
+            var $tooltip_icon = $('#discount-tooltip-icon');
+            if (!data.discount) {
+                $tooltip_icon.hide();
+                $discount_input.val('0').change();
+                $update_discount_button.data('value', data.discount).data('description', data.discount_description);
+            }
+        });
+    });
+</script>

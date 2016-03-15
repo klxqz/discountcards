@@ -29,6 +29,9 @@ class shopDiscountcardsPluginImportController extends waJsonController {
                     'discount' => $data[2],
                     'amount' => $data[3],
                 );
+                if ($model->getByField('discountcard', $discountcard['discountcard'])) {
+                    throw new waException('Ошибка: Номер дисконтной карты не уникален');
+                }
                 if ($model->insert($discountcard)) {
                     $inserted++;
                 }

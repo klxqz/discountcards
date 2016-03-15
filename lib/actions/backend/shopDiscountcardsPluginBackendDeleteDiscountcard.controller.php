@@ -5,8 +5,8 @@ class shopDiscountcardsPluginBackendDeleteDiscountcardController extends waJsonC
     public function execute() {
         try {
             $model = new shopDiscountcardsPluginModel();
-            if ($ids = waRequest::post('id', null, waRequest::TYPE_ARRAY_INT)) {
-                foreach ($ids as $id => $val) {
+            if ($ids = waRequest::post('id', array(), waRequest::TYPE_ARRAY_INT)) {
+                foreach ($ids as $id) {
                     $model->deleteById($id);
                 }
             } elseif ($id = waRequest::post('id', 0, waRequest::TYPE_INT)) {

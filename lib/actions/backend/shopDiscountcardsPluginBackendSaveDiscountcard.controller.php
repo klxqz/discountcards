@@ -14,7 +14,7 @@ class shopDiscountcardsPluginBackendSaveDiscountcardController extends waJsonCon
                 throw new waException('Ошибка: Не указан номер дисконтной карты');
             } else {
                 if ($model->getByField('discountcard', $discountcard['discountcard'])) {
-                    throw new waException('Ошибка: Номер дисконтной карты неуникален');
+                    throw new waException('Ошибка: Номер дисконтной карты не уникален');
                 }
                 $id = $model->insert($discountcard);
                 $discountcard = $model->getById($id);
