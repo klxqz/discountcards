@@ -43,7 +43,11 @@
                 </td>
                 <td>
                     {if $discountcard.contact_id}
-                        <a href="?action=customers#/id/{$discountcard.contact_id}/">{$discountcard.contact.name}</a>
+                        {if  !empty($discountcard.contact)}
+                            <a href="?action=customers#/id/{$discountcard.contact_id}/">{$discountcard.contact.name}</a>
+                        {else}
+                            Контакт № {$discountcard.contact_id} не существует
+                        {/if}
                     {else}
                         Карта не закреплена за клиентом
                     {/if}

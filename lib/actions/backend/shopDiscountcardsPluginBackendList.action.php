@@ -23,6 +23,11 @@ class shopDiscountcardsPluginBackendListAction extends waViewAction {
         foreach ($discountcards as &$discountcard) {
             if (!empty($discountcard['contact_id'])) {
                 $discountcard['contact'] = new waContact($discountcard['contact_id']);
+                try {
+                    $discountcard['contact']->load();
+                } catch (Exception $ex) {
+                    unset($discountcard['contact']);
+                }
             }
         }
 

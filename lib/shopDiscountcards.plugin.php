@@ -32,7 +32,10 @@ class shopDiscountcardsPlugin extends shopPlugin {
                     wa()->getStorage()->set('shop/discountcard', '');
                 }
             }
-            $template_path = wa()->getAppPath('plugins/discountcards/templates/FrontendCart.html', 'shop');
+            $template_path = wa()->getDataPath('plugins/discountcards/templates/FrontendCart.html', false, 'shop', true);
+            if (!file_exists($template_path)) {
+                $template_path = wa()->getAppPath('plugins/discountcards/templates/FrontendCart.html', 'shop');
+            }
             $html = $view->fetch($template_path);
             return $html;
         }
@@ -66,7 +69,7 @@ class shopDiscountcardsPlugin extends shopPlugin {
                     if ($discountcard['discount']) {
                         $discount = array();
                         $def_currency = wa('shop')->getConfig()->getCurrency(true);
-                        foreach ($params['order']['items'] as $item_id => $item) {                            
+                        foreach ($params['order']['items'] as $item_id => $item) {
                             if ($item['type'] == 'product') {
                                 $skus_model = new shopProductSkusModel();
                                 $sku = $skus_model->getSku($item['sku_id']);
@@ -196,7 +199,10 @@ class shopDiscountcardsPlugin extends shopPlugin {
                     wa()->getStorage()->set('shop/discountcard', '');
                 }
             }
-            $template_path = wa()->getAppPath('plugins/discountcards/templates/FrontendMyOrders.html', 'shop');
+            $template_path = wa()->getDataPath('plugins/discountcards/templates/FrontendMyOrders.html', false, 'shop', true);
+            if (!file_exists($template_path)) {
+                $template_path = wa()->getAppPath('plugins/discountcards/templates/FrontendMyOrders.html', 'shop');
+            }
             $html = $view->fetch($template_path);
             return $html;
         }

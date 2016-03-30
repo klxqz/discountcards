@@ -1,4 +1,12 @@
 <style type="text/css">
+    #wa .CodeMirror{
+        border: 1px solid #eee;
+    }
+    .CodeMirror-scroll {
+        height: auto;
+        overflow-y: hidden;
+        overflow-x: auto;
+    }
     .plugin-menu{
         float: right;
         list-style: none;
@@ -29,7 +37,7 @@
 
 
 <div class="fields form">
-    <form action="?module=plugins&id=discountcards&action=save" method="post" id="plugins-settings-form">
+    <form action="?plugin=discountcards&module=settings&action=save" method="post" id="plugins-settings-form">
         {$wa->csrf()}
 
         <div class="field-group">
@@ -152,6 +160,27 @@
                 </div>
             </div>
         </div>
+        <div class="field-group"{if !$settings.status} style="display:none;"{/if}>
+            <h2>Шаблоны</h2>
+            {foreach $templates as $key => $template}
+                <div class="field">
+                    <div class="name">
+                        {$template.name}<br /><span class="hint">HTML + Smarty</span>
+                    </div>
+                    <div class="value no-shift">
+                        <a class="edit-template" href="#"><i class="icon16 edit"></i>Изменить шаблон</a>
+                        <div class="template-block">
+                            <textarea id="sf-template-{$key}"  class="body" name="templates[{$key}][template]">{$template.template|escape}</textarea>
+                            {if $template.change_tpl}
+                                <p class="gray"><i class="icon16 exclamation"></i>Внимание! Шаблон по умолчанию был изменен</p>
+                                <input type="checkbox" name="templates[{$key}][reset_tpl]" value="1"  /> - Сбросить изменения, использовать шаблон по умолчанию
+                            {/if}
+                        </div>
+                        <div class="clear-both"></div>
+                    </div>
+                </div>
+            {/foreach}
+        </div>
 
         <div class="field"{if !$settings.status} style="display:none"{/if}>
             <div class="value submit">
@@ -196,6 +225,46 @@
             }
             var f = $("#plugins-settings-form");
             $.post(f.attr('action'), f.serialize());
+        });
+    {$tpls = []}
+    {foreach $templates as $key => $template}
+        {$count = array_push($tpls, "'sf-template-`$key`'")}
+    {/foreach}
+        var ids = [{implode(',', $tpls)}];
+        for (var i = 0; i < ids.length; i++) {
+            var c = CodeMirror.fromTextArea(document.getElementById(ids[i]), {
+                mode: "text/html",
+                tabMode: "indent",
+                height: "dynamic",
+                lineWrapping: true
+            });
+            $(ids[i]).change(function () {
+                c.setValue($(this).val())
+            });
+            $(ids[i]).submit(function () {
+                var f = $(this);
+                $.post(f.attr('action'), f.serialize(), function (response) {
+                    if (response.status == 'ok') {
+                        $('#wa-design-button').removeClass('red').addClass('green');
+                        $("#wa-editor-status-fail").hide()
+                        $("#wa-editor-status-ok span").html(response.data.message);
+                        $("#wa-editor-status-ok").fadeIn('slow', function () {
+                            $(this).fadeOut(1000);
+                        });
+                    } else {
+                        $('#wa-design-button').removeClass('green').addClass('red');
+                        $("#wa-editor-status-ok").hide();
+                        $("#wa-editor-status-fail span").html(response.errors.join(', '));
+                        $("#wa-editor-status-fail").fadeIn('slow');
+                    }
+                }, "json")
+                return false;
+            });
+        }
+        $('.template-block').hide();
+        $('.edit-template').click(function () {
+            $(this).closest('.field').find('.template-block').slideToggle('slow');
+            return false;
         });
     });
 </script>
