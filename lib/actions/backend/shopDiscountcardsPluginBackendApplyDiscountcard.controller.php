@@ -12,7 +12,7 @@ class shopDiscountcardsPluginBackendApplyDiscountcardController extends waJsonCo
             } else {
                 if ($discountcard_number = waRequest::post('discountcard')) {
                     if (!($customer_id = waRequest::post('customer_id', 0, waRequest::TYPE_INT))) {
-                        throw new waException('Укажите покупателя');
+                        //throw new waException('Укажите покупателя');
                     }
                     $model = new shopDiscountcardsPluginModel();
                     
