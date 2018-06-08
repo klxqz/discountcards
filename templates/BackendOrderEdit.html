@@ -25,6 +25,12 @@
 <script type="text/javascript">
     $(function () {
         $('.discountcard-input-block').insertAfter('form#order-edit-form .content table#order-items');
+        $('#discountcard-input').keypress(function (e) {
+            if (e.keyCode == 13) {
+                $('#discountcard-submit-apply').click();
+                return false;
+            }
+        });
         $('.discountcard-submit').click(function () {
             var action = $(this).attr('id') == 'discountcard-submit-apply' ? 'apply' : 'cancel';
             var button = $(this);
