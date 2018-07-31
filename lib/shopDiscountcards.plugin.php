@@ -76,7 +76,7 @@ class shopDiscountcardsPlugin extends shopPlugin {
                                 if (!($this->getSettings('ignore_compare_price') && $sku['compare_price'] > 0)) {
                                     $discount['items'][$item_id] = array(
                                         'discount' => shop_currency($item['price'] * $discountcard['discount'] / 100.00, $item['currency'], $params['order']['currency'], false) * $item['quantity'],
-                                        'description' => "Скидка по дисконтной карте {$discountcard['discount']}%"
+                                        'description' => "Скидка по дисконтной карте «{$discountcard['discountcard']}» - {$discountcard['discount']}%"
                                     );
                                 }
                             }
@@ -225,14 +225,22 @@ HTML;
     public function backendOrderEdit($order) {
         if ($this->getSettings('status')) {
             $view = wa()->getView();
-            if ($discountcard_number = wa()->getStorage()->get('shop/discountcard')) {
-                $model = new shopDiscountcardsPluginModel();
-                if ($discountcard = $model->getByField('discountcard', $discountcard_number)) {
-                    $discountcard['contact'] = new waContact($discountcard['contact_id']);
-                    $discountcard['amount_format'] = shop_currency($discountcard['amount']);
-                    $view->assign('discountcard', $discountcard);
-                }
+            $discountcard_order_model = new shopDiscountcardsPluginOrderModel();
+            if ($discountcard_order = $discountcard_order_model->getByField('order_id', $order['id'])) {
+                wa()->getStorage()->set('shop/discountcard', $discountcard_order['discountcard']);
             }
+
+            if (wa()->getStorage()->get('shop/discountcard')) {
+                $discountcard_number = wa()->getStorage()->get('shop/discountcard');
+            }
+
+            $model = new shopDiscountcardsPluginModel();
+            if ($discountcard = $model->getByField('discountcard', $discountcard_number)) {
+                $discountcard['contact'] = new waContact($discountcard['contact_id']);
+                $discountcard['amount_format'] = shop_currency($discountcard['amount']);
+                $view->assign('discountcard', $discountcard);
+            }
+
             $template_path = wa()->getAppPath('plugins/discountcards/templates/BackendOrderEdit.html', 'shop');
             $html = $view->fetch($template_path);
             return $html;
