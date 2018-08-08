@@ -91,6 +91,10 @@ class shopDiscountcardsPlugin extends shopPlugin {
         }
     }
 
+    public function orderActionEdit($params) {
+        $this->orderActionCreate($params);
+    }
+
     public function orderActionCreate($params) {
         if ($this->getSettings('status')) {
             if ($discountcard = wa()->getStorage()->get('shop/discountcard')) {
