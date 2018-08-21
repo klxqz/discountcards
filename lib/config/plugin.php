@@ -4,7 +4,7 @@ return array(
     'name' => 'Дисконтные карты',
     'description' => 'Предоставление накопительной скидки по дисконтным картам',
     'vendor' => 985310,
-    'version' => '1.6.4',
+    'version' => '1.6.5',
     'img' => 'img/discountcards.png',
     'shop_settings' => true,
     'frontend' => true,

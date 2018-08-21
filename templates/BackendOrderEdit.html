@@ -79,16 +79,5 @@
             });
             return false;
         });
-
-        $('#order-edit-form').on('order_total_updated', function (e, data) {
-            var $update_discount_button = $('#update-discount');
-            var $discount_input = $('#discount');
-            var $tooltip_icon = $('#discount-tooltip-icon');
-            if (!data.discount) {
-                $tooltip_icon.hide();
-                $discount_input.val('0').change();
-                $update_discount_button.data('value', data.discount).data('description', data.discount_description);
-            }
-        });
     });
 </script>

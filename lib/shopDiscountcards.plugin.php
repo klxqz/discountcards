@@ -110,6 +110,9 @@ class shopDiscountcardsPlugin extends shopPlugin {
                     wa()->getStorage()->set('shop/discountcard', '');
                     wa()->getStorage()->set('shop/discountcard/customer_id', '');
                 }
+            } else {
+                $discountcard_order_model = new shopDiscountcardsPluginOrderModel();
+                $discountcard_order_model->deleteByField('order_id', $params['order_id']);
             }
         }
     }

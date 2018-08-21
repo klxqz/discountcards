@@ -15,12 +15,12 @@ class shopDiscountcardsPluginBackendApplyDiscountcardController extends waJsonCo
                         //throw new waException('Укажите покупателя');
                     }
                     $model = new shopDiscountcardsPluginModel();
-                    
+
                     if ($app_settings_model->get(shopDiscountcardsPlugin::$plugin_id, 'binding_customer')) {
-                            $discountcard = $model->getByField(array('contact_id' => $customer_id, 'discountcard' => $discountcard_number));
-                            if (empty($discountcard)) {
-                                $discountcard = $model->getByField(array('contact_id' => 0, 'discountcard' => $discountcard_number));
-                            }
+                        $discountcard = $model->getByField(array('contact_id' => $customer_id, 'discountcard' => $discountcard_number));
+                        if (empty($discountcard)) {
+                            $discountcard = $model->getByField(array('contact_id' => 0, 'discountcard' => $discountcard_number));
+                        }
                     } else {
                         $discountcard = $model->getByField('discountcard', $discountcard_number);
                     }
